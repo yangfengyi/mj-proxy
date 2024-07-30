@@ -1,11 +1,12 @@
-FROM node:18.16.0-alpine3.17 as production-stage
+FROM node:14
 
 WORKDIR /app
-COPY . .
+
+COPY package*.json ./
+COPY pnpm-lock.yaml ./
 RUN npm config set registry http://r.cnpmjs.org/
-RUN npm install -g pnpm pm2
-RUN pnpm install
-RUN pnpm start
+RUN npm install --freeze
 
 EXPOSE 7000
-CMD [ "npm", "run", "start" ]
+
+CMD ["npm", "start"]
