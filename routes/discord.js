@@ -1,1 +1,41 @@
-const _0x4805fd=_0x3f68;(function(_0x11c2de,_0x1620ca){const _0x175d1f=_0x3f68,_0x58f8c2=_0x11c2de();while(!![]){try{const _0x42ee67=-parseInt(_0x175d1f(0x9e))/0x1+parseInt(_0x175d1f(0xa3))/0x2*(-parseInt(_0x175d1f(0xa0))/0x3)+parseInt(_0x175d1f(0x95))/0x4+parseInt(_0x175d1f(0x9c))/0x5+parseInt(_0x175d1f(0x8f))/0x6+-parseInt(_0x175d1f(0xa1))/0x7*(-parseInt(_0x175d1f(0x98))/0x8)+-parseInt(_0x175d1f(0x91))/0x9*(-parseInt(_0x175d1f(0x9f))/0xa);if(_0x42ee67===_0x1620ca)break;else _0x58f8c2['push'](_0x58f8c2['shift']());}catch(_0x854978){_0x58f8c2['push'](_0x58f8c2['shift']());}}}(_0x3d09,0xb7e8e));const express=require(_0x4805fd(0x8b)),router=express[_0x4805fd(0x93)](),discord=require(_0x4805fd(0x94)),axios=require('axios');function _0x3f68(_0x560ffe,_0xeca23e){const _0x3d099f=_0x3d09();return _0x3f68=function(_0x3f68ec,_0x5ad7a3){_0x3f68ec=_0x3f68ec-0x89;let _0x56b44e=_0x3d099f[_0x3f68ec];return _0x56b44e;},_0x3f68(_0x560ffe,_0xeca23e);}function _0x3d09(){const _0x40df37=['express','catch','stream','url','238080ogKOwo','query','792YIyPsi','exports','Router','../services/discord','3687316ZyGNrA','sendDrawInteractions','body','8lqeDor','post','data','/draw','2430390gRDfjp','then','384621PYPDcX','9720lqnNJp','6819RxRaMk','2229598tsZDZX','/pipe','628pVuSgo','queryMessageList','send','get','headers'];_0x3d09=function(){return _0x40df37;};return _0x3d09();}router[_0x4805fd(0x89)]('/list',async(_0x432ae4,_0x5117e8,_0x4a4fcf)=>{const _0x19e3f7=_0x4805fd,{authorization:_0x44ca41}=_0x432ae4['headers'],{channel_id:_0x2300cf}=_0x432ae4['query'],_0x3dfcc2={'channel_id':_0x2300cf,'authorization':_0x44ca41};discord[_0x19e3f7(0xa4)](_0x3dfcc2)[_0x19e3f7(0x9d)](_0x38371d=>_0x5117e8[_0x19e3f7(0xa5)](_0x38371d))[_0x19e3f7(0x8c)](_0x4a4fcf);}),router['post'](_0x4805fd(0x9b),async(_0x30c16c,_0x8c08de,_0x1b69cc)=>{const _0x499a1f=_0x4805fd,{authorization:_0x20af17}=_0x30c16c[_0x499a1f(0x8a)];discord[_0x499a1f(0x96)]({'body':_0x30c16c[_0x499a1f(0x97)],'token':_0x20af17})[_0x499a1f(0x9d)](_0x453f00=>_0x8c08de[_0x499a1f(0xa5)](_0x453f00))['catch'](_0x1b69cc);}),router[_0x4805fd(0x89)](_0x4805fd(0xa2),async(_0x269995,_0xc59c7a,_0x48af02)=>{const _0x48122c=_0x4805fd;(await axios['get'](_0x269995[_0x48122c(0x90)][_0x48122c(0x8e)],{'responseType':_0x48122c(0x8d)}))[_0x48122c(0x9a)]['pipe'](_0xc59c7a);}),router[_0x4805fd(0x99)]('/replaceUpload',async(_0x45acec,_0x52cdc8,_0x12b6c0)=>{const _0x3166d8=_0x4805fd;discord['replaceUpload'](_0x45acec[_0x3166d8(0x97)])[_0x3166d8(0x9d)](_0x54b0f0=>_0x52cdc8['send'](_0x54b0f0))[_0x3166d8(0x8c)](_0x12b6c0);}),module[_0x4805fd(0x92)]=router;
+const express = require('express');
+const router = express.Router();
+const discord = require('../services/discord');
+const axios = require('axios');
+
+// 获取消息列表
+router.get('/list', async (req, res, next) => {
+  const { authorization } = req.headers;
+  const { channel_id } = req.query;
+  const params = { channel_id, authorization };
+
+  discord
+    .queryMessageList(params)
+    .then((data) => res.send(data))
+    .catch(next);
+});
+
+// 发送绘图交互
+router.post('/draw', async (req, res, next) => {
+  const { authorization } = req.headers;
+
+  discord
+    .sendDrawInteractions({ body: req.body, token: authorization })
+    .then((data) => res.send(data))
+    .catch(next);
+});
+
+// 管道传输（可能用于图片或文件）
+router.get('/pipe', async (req, res, next) => {
+  (await axios.get(req.query.url, { responseType: 'stream' })).data.pipe(res);
+});
+
+// 替换上传
+router.post('/replaceUpload', async (req, res, next) => {
+  discord
+    .replaceUpload(req.body)
+    .then((data) => res.send(data))
+    .catch(next);
+});
+
+module.exports = router;

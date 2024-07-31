@@ -26,3 +26,4 @@ publish
 
 deploy-2
 deploy/mysql_data
+.vercel
